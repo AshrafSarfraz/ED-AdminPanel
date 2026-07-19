@@ -1,7 +1,7 @@
 // 📁 pages/paymentRecords/AdminCommission.jsx
-// Platform ka commission — Invoice.commissionAmount se seedha. % KABHI hardcode
-// nahi karte (settings badal sakti hain) — backend se live % aata hai, jo har
-// order ke actual data se derive hota hai (isliye purane orders ka % kabhi galat nahi dikhega).
+// Platform ka commission — sirf commission. % KABHI hardcode nahi karte (settings
+// badal sakti hain) — backend se live % aata hai, jo har order ke actual data se
+// derive hota hai (isliye purane orders ka % kabhi galat nahi dikhega).
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loader from "../../components/Loader";
@@ -48,7 +48,6 @@ export default function AdminCommission() {
   // currentSettings = live settings (what a NEW order right now would use) — shown as a note
   // if it differs from the historical average (e.g. admin changed % recently).
   const commLabel = `Platform Commission (${fmtPct(overall.commissionPct)})`;
-  const feeLabel  = `Rider Fee (${fmtPct(overall.deliveryFeePct)}, reference)`;
   const settingsChanged =
     settings.platformCommission != null && overall.commissionPct != null &&
     settings.platformCommission !== overall.commissionPct;
@@ -61,11 +60,7 @@ export default function AdminCommission() {
         <div>
           <h1 className="text-[16px] md:text-[18px] font-bold text-brand-dark m-0">Platform Commission</h1>
           <p className="text-[11px] text-brand-muted mt-[2px]">
-            {filtered.length} bulk orders · {fmtPct(overall.commissionPct)} platform fee 
-            {/* <button onClick={() => navigate("/payments/rider-earnings")} className="text-brand-primary font-semibold bg-transparent border-none cursor-pointer p-0 ml-1 underline">
-              Rider Earnings →
-            </button> */}
-            
+            {filtered.length} bulk orders · {fmtPct(overall.commissionPct)} platform fee
           </p>
           {settingsChanged && (
             <p className="text-[10px] text-amber-600 mt-1 m-0">
@@ -81,10 +76,9 @@ export default function AdminCommission() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mb-4">
         <StatCard value={fmtAmt(overall.totalBuyerPaid)}   label="Total Buyer Payments"  sub="What buyers paid (incl. all fees)" />
         <StatCard value={fmtAmt(overall.totalCommission)}  label={commLabel}             sub="Our actual earnings" />
-        <StatCard value={fmtAmt(overall.totalDeliveryFee)} label={feeLabel}               sub="Not ours — see Rider Earnings" />
       </div>
 
       {/* Table */}
@@ -97,7 +91,7 @@ export default function AdminCommission() {
               <table className="w-full border-collapse">
                 <thead className="sticky top-0 z-10">
                   <tr className="bg-[#FFEDD5]">
-                    {["Bulk ID", "Item", "Buyers", "Total Qty", "Win Price", "Platform Commission", "Rider Fee", "Buyer Paid Total", "Bid Date", ""].map(h => (
+                    {["Bulk ID", "Item", "Buyers", "Total Qty", "Win Price", "Platform Commission", "Buyer Paid Total", "Bid Date", ""].map(h => (
                       <th key={h} className="px-4 py-[10px] text-left text-[11px] text-[#7c3a1e] font-bold tracking-wide whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
@@ -128,9 +122,6 @@ export default function AdminCommission() {
                       <td className="px-4 py-[10px] text-[12px] font-bold text-purple-700">
                         {fmtAmt(o.totalCommission)} <span className="text-[10px] text-brand-muted font-normal">({fmtPct(o.commissionPct)})</span>
                       </td>
-                      <td className="px-4 py-[10px] text-[12px] font-semibold text-blue-600">
-                        {fmtAmt(o.totalDeliveryFee)} <span className="text-[10px] text-brand-muted font-normal">({fmtPct(o.deliveryFeePct)})</span>
-                      </td>
                       <td className="px-4 py-[10px] text-[12px] font-semibold text-brand-dark">{fmtAmt(o.totalBuyerPaid)}</td>
                       <td className="px-4 py-[10px] text-[11px] text-brand-gray">{fmtDate(o.bidDate || o.createdAt)}</td>
                       <td className="px-4 py-[10px]">
@@ -147,10 +138,6 @@ export default function AdminCommission() {
 
             {/* Footer totals */}
             <div className="flex justify-end gap-8 px-4 md:px-6 py-3 border-t border-brand-border bg-brand-lighter flex-wrap">
-              <div className="text-right">
-                <p className="text-[10px] text-brand-muted m-0 mb-1">{feeLabel}</p>
-                <p className="text-[14px] font-extrabold text-blue-600 m-0">{fmtAmt(overall.totalDeliveryFee)}</p>
-              </div>
               <div className="text-right">
                 <p className="text-[10px] text-brand-muted m-0 mb-1">{commLabel}</p>
                 <p className="text-[14px] font-extrabold text-purple-700 m-0">{fmtAmt(overall.totalCommission)}</p>
