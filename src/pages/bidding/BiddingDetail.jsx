@@ -93,7 +93,10 @@ export default function BiddingDetail() {
               {refreshing    && <span className="text-[10px] text-brand-primary font-semibold">● syncing…</span>}
             </div>
             <p className="text-[11px] text-brand-muted m-0">
-              {data.totalQuantity?.toLocaleString()} {data.unit} · Bid date: {fmtDate(data.bidDate)}
+              Bid date: {fmtDate(data.bidDate)}
+            </p>
+            <p className="text-[11px] text-brand-muted m-0 mt-1">
+              Price Range: {data.minPrice != null ? `QAR ${data.minPrice} – QAR ${data.maxPrice}` : "—"}
             </p>
           </div>
           <div className="text-right shrink-0">
@@ -106,32 +109,19 @@ export default function BiddingDetail() {
         </div>
       </div>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-        {[
-          ["Total Buyers", data.totalBuyers],
-          ["Total Bids",   data.totalBids],
-          ["Price Range",  data.minPrice != null ? `${data.minPrice} – ${data.maxPrice}` : "—"],
-          ["Retry Count",  data.retryCount],
-        ].map(([label, value]) => (
-          <div key={label} className="bg-gradient-to-br from-[#FFF8EF] via-[#FFF8EF] to-white border border-brand-border rounded-[16px] p-4 shadow-[0_4px_20px_rgba(241,90,33,0.06)]">
-            <p className="text-[11px] text-brand-muted m-0 mb-1">{label}</p>
-            <p className="text-[18px] font-extrabold text-brand-primary m-0">{value}</p>
-          </div>
-        ))}
-      </div>
+     
 
       {/* Winner */}
       {data.winner && (
-        <div className="bg-brand-primary rounded-[10px] p-4 mb-4">
+        <div className="bg-green-50 border border-green-200 rounded-[10px] p-4 mb-4">
           <div className="flex items-center gap-2 mb-3">
-            <p className="text-[11px] text-white font-bold uppercase m-0">Winner</p>
+            <p className="text-[11px] text-green-700 font-bold uppercase m-0">Winner</p>
           </div>
           <div className="flex gap-6 flex-wrap">
             {[["Name", data.winner.name], ["Company", data.winner.companyName], ["Email", data.winner.email], ["Phone", data.winner.phone]].map(([l, v]) => (
               <div key={l}>
-                <p className="text-[10px] text-white/80 m-0 mb-[2px]">{l}</p>
-                <p className="text-[12px] font-semibold text-white m-0">{v || "—"}</p>
+                <p className="text-[10px] text-brand-muted m-0 mb-[2px]">{l}</p>
+                <p className="text-[12px] font-semibold text-brand-dark m-0">{v || "—"}</p>
               </div>
             ))}
           </div>
@@ -167,39 +157,38 @@ export default function BiddingDetail() {
                 </tr>
               </thead>
               <tbody>
-                {sortedBids.map((bid, i) => {
+              {sortedBids.map((bid, i) => {
                   const bc   = BID_STATUS_CFG[bid.status] || { bg: "bg-gray-100", text: "text-gray-600" };
                   const diff = (bid.pricePerUnit != null && data.winningPrice != null) ? bid.pricePerUnit - data.winningPrice : null;
                   return (
                     <tr key={i} className={`border-b border-[#fdf0ea] transition-colors
-                      ${bid.isWinner ? "bg-brand-primary" : "hover:bg-[rgba(241,90,33,0.05)]"}`}>
-                      <td className={`px-4 py-[10px] text-[11px] font-bold ${bid.isWinner ? "text-white" : "text-brand-muted"}`}>
+                      ${bid.isWinner ? "bg-[#FFF4EC] border-l-[3px] border-l-brand-primary" : "hover:bg-[rgba(241,90,33,0.05)]"}`}>
+                      <td className={`px-4 py-[10px] text-[11px] font-bold ${bid.isWinner ? "text-brand-primary" : "text-brand-muted"}`}>
                         {i + 1}
                       </td>
-                      <td className={`px-4 py-[10px] text-[12px] ${bid.isWinner ? "font-bold text-white" : "font-semibold text-brand-dark"}`}>
+                      <td className={`px-4 py-[10px] text-[12px] font-semibold text-brand-dark`}>
                         {bid.supplierName || "—"}
                       </td>
-                      <td className={`px-4 py-[10px] text-[12px] ${bid.isWinner ? "text-white/80" : "text-brand-gray"}`}>
+                      <td className="px-4 py-[10px] text-[12px] text-brand-gray">
                         {bid.companyName || "—"}
                       </td>
                       <td className="px-4 py-[10px]">
-                        <span className={`text-[12px] font-bold ${bid.isWinner ? "text-white" : "text-brand-dark"}`}>
+                        <span className="text-[12px] font-bold text-brand-dark">
                           {bid.pricePerUnit != null ? `QAR ${bid.pricePerUnit}` : "—"}
                         </span>
-                        <span className={`text-[10px] ml-1 ${bid.isWinner ? "text-white/70" : "text-brand-muted"}`}>
+                        <span className="text-[10px] ml-1 text-brand-muted">
                           / {data.unit}
                         </span>
                       </td>
                       <td className="px-4 py-[10px]">
                         {diff === null
-                          ? <span className={bid.isWinner ? "text-white/80 text-[11px]" : "text-[11px] text-brand-muted"}>—</span>
+                          ? <span className="text-[11px] text-brand-muted">—</span>
                           : diff === 0
-                          ? <span className="text-[11px] text-white font-semibold">Winner</span>
+                          ? <span className="text-[11px] text-brand-primary font-semibold">Winner</span>
                           : <span className="text-[11px] text-red-500 font-semibold">+QAR {diff.toFixed(2)}</span>}
                       </td>
                       <td className="px-4 py-[10px]">
-                        <span className={`px-2 py-[2px] rounded-[20px] text-[10px] font-semibold capitalize
-                          ${bid.isWinner ? "bg-white/20 text-white" : `${bc.bg} ${bc.text}`}`}>
+                        <span className={`px-2 py-[2px] rounded-[20px] text-[10px] font-semibold capitalize ${bc.bg} ${bc.text}`}>
                           {bid.status}
                         </span>
                       </td>
