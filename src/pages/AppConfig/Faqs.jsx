@@ -101,7 +101,7 @@ export default function Faqs() {
 
           <div className="flex gap-2">
             <button onClick={save} disabled={saving}
-              className="px-4 py-[7px] bg-brand-gradient text-white rounded-[8px] text-[12px] font-bold border-none cursor-pointer disabled:opacity-60 shadow-[0_4px_12px_rgba(241,90,33,0.3)]">
+              className="px-4 py-[7px] bg-brand-primary text-white rounded-[8px] text-[12px] font-bold border-none cursor-pointer disabled:opacity-60 shadow-[0_4px_12px_rgba(241,90,33,0.3)]">
               {saving ? "Saving..." : editing ? "Update FAQ" : "Add FAQ"}
             </button>
             <button onClick={cancel}
