@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
-
-const BASE  = "https://el-distibutor-backend.onrender.com";
-const token = () => localStorage.getItem("adminToken");
-
-const apiFetch = (path, opts = {}) =>
-  fetch(`${BASE}${path}`, {
-    ...opts,
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token()}`, ...(opts.headers || {}) },
-  }).then(r => r.json());
+import API from "../../api/axios"; // ← tumhara axios instance
 
 const EMPTY = { tag: "", title: "", subtitle: "", emoji: "", bg: "#F15A21", waNumber: "", waText: "", order: 0 };
 
@@ -23,7 +15,7 @@ export default function Banners() {
 
   const load = async () => {
     setLoading(true);
-    const data = await apiFetch("/api/admin/banner");
+    const { data } = await API.get("/app-config/banners/all");
     if (data.success) setItems(data.data);
     setLoading(false);
   };
@@ -36,25 +28,27 @@ export default function Banners() {
       return;
     }
     setSaving(true);
-    const url    = editing ? `/api/admin/banner/${editing._id}` : "/api/admin/banner";
-    const method = editing ? "PUT" : "POST";
-    const data   = await apiFetch(url, { method, body: JSON.stringify(form) });
-    if (data.success) {
-      if (editing) setItems(is => is.map(i => i._id === editing._id ? data.data : i));
-      else         setItems(is => [data.data, ...is]);
-      cancel();
-    } else setError(data.message || "Error saving");
+    try {
+      const { data } = editing
+        ? await API.put(`/app-config/banners/${editing._id}`, form)
+        : await API.post("/app-config/banners", form);
+      if (data.success) {
+        if (editing) setItems(is => is.map(i => i._id === editing._id ? data.data : i));
+        else         setItems(is => [data.data, ...is]);
+        cancel();
+      } else setError(data.message || "Error saving");
+    } catch { setError("Network error"); }
     setSaving(false);
   };
 
   const toggle = async (id) => {
-    const data = await apiFetch(`/api/admin/banner/${id}/toggle`, { method: "PUT" });
+    const { data } = await API.put(`/app-config/banners/${id}/toggle`);
     if (data.success) setItems(is => is.map(i => i._id === id ? { ...i, isActive: data.data.isActive } : i));
   };
 
   const del = async (id) => {
     if (!confirm("Delete this banner?")) return;
-    await apiFetch(`/api/admin/banner/${id}`, { method: "DELETE" });
+    await API.delete(`/app-config/banners/${id}`);
     setItems(is => is.filter(i => i._id !== id));
   };
 

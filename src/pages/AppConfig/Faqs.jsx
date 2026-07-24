@@ -1,31 +1,23 @@
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
-
-const BASE  = "https://el-distibutor-backend.onrender.com";
-const token = () => localStorage.getItem("adminToken");
-
-const apiFetch = (path, opts = {}) =>
-  fetch(`${BASE}${path}`, {
-    ...opts,
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token()}`, ...(opts.headers || {}) },
-  }).then(r => r.json());
+import API from "../../api/axios"; // ← tumhara axios instance
 
 const EMPTY = { question: "", answer: "", order: 0 };
 
 export default function Faqs() {
-  const [items,   setItems]   = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [form,    setForm]    = useState(EMPTY);
-  const [editing, setEditing] = useState(null);
-  const [adding,  setAdding]  = useState(true);
-  const [saving,  setSaving]  = useState(false);
-  const [error,   setError]   = useState("");
-  const [search,  setSearch]  = useState("");
+  const [items,    setItems]    = useState([]);
+  const [loading,  setLoading]  = useState(true);
+  const [form,     setForm]     = useState(EMPTY);
+  const [editing,  setEditing]  = useState(null);
+  const [adding,   setAdding]   = useState(true);
+  const [saving,   setSaving]   = useState(false);
+  const [error,    setError]    = useState("");
+  const [search,   setSearch]   = useState("");
   const [expanded, setExpanded] = useState(null);
 
   const load = async () => {
     setLoading(true);
-    const data = await apiFetch("/api/admin/faq");
+    const { data } = await API.get("/app-config/faqs/all");
     if (data.success) setItems(data.data);
     setLoading(false);
   };
@@ -35,25 +27,27 @@ export default function Faqs() {
     setError("");
     if (!form.question || !form.answer) { setError("Question and Answer are required"); return; }
     setSaving(true);
-    const url    = editing ? `/api/admin/faq/${editing._id}` : "/api/admin/faq";
-    const method = editing ? "PUT" : "POST";
-    const data   = await apiFetch(url, { method, body: JSON.stringify(form) });
-    if (data.success) {
-      if (editing) setItems(is => is.map(i => i._id === editing._id ? data.data : i));
-      else         setItems(is => [data.data, ...is]);
-      cancel();
-    } else setError(data.message || "Error saving");
+    try {
+      const { data } = editing
+        ? await API.put(`/app-config/faqs/${editing._id}`, form)
+        : await API.post("/app-config/faqs", form);
+      if (data.success) {
+        if (editing) setItems(is => is.map(i => i._id === editing._id ? data.data : i));
+        else         setItems(is => [data.data, ...is]);
+        cancel();
+      } else setError(data.message || "Error saving");
+    } catch { setError("Network error"); }
     setSaving(false);
   };
 
   const toggle = async (id) => {
-    const data = await apiFetch(`/api/admin/faq/${id}/toggle`, { method: "PUT" });
+    const { data } = await API.put(`/app-config/faqs/${id}/toggle`);
     if (data.success) setItems(is => is.map(i => i._id === id ? { ...i, isActive: data.data.isActive } : i));
   };
 
   const del = async (id) => {
     if (!confirm("Delete this FAQ?")) return;
-    await apiFetch(`/api/admin/faq/${id}`, { method: "DELETE" });
+    await API.delete(`/app-config/faqs/${id}`);
     setItems(is => is.filter(i => i._id !== id));
   };
 
@@ -67,8 +61,8 @@ export default function Faqs() {
 
   const F = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
 
-  const inputCls  = "w-full px-3 py-[9px] border border-brand-border rounded-[8px] text-[12px] outline-none bg-white focus:border-brand-primary transition-all";
-  const labelCls  = "block text-[11px] font-semibold text-brand-dark mb-1";
+  const inputCls = "w-full px-3 py-[9px] border border-brand-border rounded-[8px] text-[12px] outline-none bg-white focus:border-brand-primary transition-all";
+  const labelCls = "block text-[11px] font-semibold text-brand-dark mb-1";
 
   const filtered = items.filter(i =>
     i.question.toLowerCase().includes(search.toLowerCase()) ||

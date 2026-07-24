@@ -1,14 +1,6 @@
 import { useState, useEffect } from "react";
 import Loader from "../../components/Loader";
-
-const BASE  = "https://el-distibutor-backend.onrender.com";
-const token = () => localStorage.getItem("adminToken");
-
-const apiFetch = (path, opts = {}) =>
-  fetch(`${BASE}${path}`, {
-    ...opts,
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token()}`, ...(opts.headers || {}) },
-  }).then(r => r.json());
+import API from "../../api/axios"; // ← tumhara axios instance
 
 export default function Terms() {
   const [items,   setItems]   = useState([]);
@@ -22,7 +14,7 @@ export default function Terms() {
 
   const load = async () => {
     setLoading(true);
-    const data = await apiFetch("/api/admin/terms");
+    const { data } = await API.get("/app-config/terms/all");
     if (data.success) setItems(data.data);
     setLoading(false);
   };
@@ -32,18 +24,16 @@ export default function Terms() {
     setError("");
     if (!form.content || !form.version) { setError("Content and Version are required"); return; }
     setSaving(true);
-    const url    = editing ? `/api/admin/terms/${editing._id}` : "/api/admin/terms";
-    const method = editing ? "PUT" : "POST";
-    const data   = await apiFetch(url, { method, body: JSON.stringify(form) });
-    if (data.success) {
-      if (editing) {
-        setItems(is => is.map(i => i._id === editing._id ? data.data : i));
-      } else {
-        // POST deactivates all old — reload full list
-        load();
-      }
-      cancel();
-    } else setError(data.message || "Error saving");
+    try {
+      const { data } = editing
+        ? await API.put(`/app-config/terms/${editing._id}`, form)
+        : await API.post("/app-config/terms", form);
+      if (data.success) {
+        if (editing) setItems(is => is.map(i => i._id === editing._id ? data.data : i));
+        else load(); // POST deactivates all old — reload full list
+        cancel();
+      } else setError(data.message || "Error saving");
+    } catch { setError("Network error"); }
     setSaving(false);
   };
 
