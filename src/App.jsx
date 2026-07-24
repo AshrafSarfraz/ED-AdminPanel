@@ -51,6 +51,9 @@ import BiddingSettings from "./pages/Settings/CommissionSetting/BiddingSettings"
 import CommissionSettings from "./pages/Settings/CommissionSetting/CommissionSettings";
 import DeliverySettings from "./pages/Settings/CommissionSetting/DeliverySettings";
 import Dashboard from "./pages/Dashboard";
+import Banners from "./pages/AppConfig/Banners";
+import Faqs from "./pages/AppConfig/Faqs";
+import Terms from "./pages/AppConfig/Terms";
 
 
 
@@ -110,11 +113,13 @@ export default function App() {
         <Route path="/countries"                                  element={<WithLayout><Countries /></WithLayout>} />
         <Route path="/categories"                                 element={<WithLayout><Categories /></WithLayout>} />
         <Route path="/items"                                      element={<WithLayout><Items /></WithLayout>} />
-        <Route path="/Brands"                                     element={<WithLayout><Brands /></WithLayout>} />
-        <Route path="/BiddingSettings"                            element={<WithLayout><BiddingSettings /></WithLayout>} />
-        <Route path="/CommissionSettings"                         element={<WithLayout><CommissionSettings /></WithLayout>} />
-        <Route path="/DeliverySettings"                           element={<WithLayout><DeliverySettings /></WithLayout>} />
-
+        <Route path="/brands"                                     element={<WithLayout><Brands /></WithLayout>} />
+        <Route path="/biddingSettings"                            element={<WithLayout><BiddingSettings /></WithLayout>} />
+        <Route path="/commissionSettings"                         element={<WithLayout><CommissionSettings /></WithLayout>} />
+        <Route path="/deliverySettings"                           element={<WithLayout><DeliverySettings /></WithLayout>} />
+        <Route path="/banners"                                     element={<WithLayout><Banners /></WithLayout>} />
+        <Route path="/faqs"                                       element={<WithLayout><Faqs /></WithLayout>} />
+        <Route path="/terms"                                      element={<WithLayout><Terms /></WithLayout>} />
 
         <Route path="/admins"                                     element={<WithLayout><Admins/></WithLayout>} />
         <Route path="/return-orders"                              element={<WithLayout><AdminReturnOrders /></WithLayout>} />
