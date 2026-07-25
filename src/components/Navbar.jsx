@@ -57,9 +57,9 @@ export default function Navbar() {
   ];
 
   const appConfigItems = [
-    { label: "Banners", path: "/banners", icon: <FaMobile /> },
-    { label: "FAQs",    path: "/faqs",    icon: <FaMobile /> },
-    { label: "Terms",   path: "/terms",   icon: <FaMobile /> },
+    { label: "Banners", path: "/banners", },
+    { label: "FAQs",    path: "/faqs",  },
+    { label: "Terms",   path: "/terms",   },
   ];
 
   const masterActive    = masterItems.some(i => location.pathname === i.path);
