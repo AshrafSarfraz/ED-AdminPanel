@@ -176,7 +176,7 @@ export function AdminReturnDetail() {
   const isResolved = data.status.startsWith("resolved_");
 
   return (
-    <div className="max-w-[800px]">
+    <div className="max-w-[1500px]">
 
       {/* Header */}
       <div className="flex items-start justify-between mb-4 flex-wrap gap-3">
