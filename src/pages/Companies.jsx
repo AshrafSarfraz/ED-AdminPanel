@@ -362,7 +362,7 @@ export default function Companies() {
     <div className="max-w-[1500px]">
 
       {/* Stat Cards */}
-      <div className=" w-full grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-5">
+      <div className="  grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4 md:mb-5">
         <StatCard icon="building"  value={totalCount.toLocaleString()}    label="Total Companies"  active={isAllSelected}      onClick={selectAll}      />
         <StatCard icon="check"     value={activeCount.toLocaleString()}   label="Active Companies" active={activeOnly}          onClick={selectActive}   />
         <StatCard icon="trending"  value={supplierCount.toLocaleString()} label="Supplier"         active={isSupplierSelected}  onClick={selectSupplier} />
