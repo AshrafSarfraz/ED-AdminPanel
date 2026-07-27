@@ -6,7 +6,7 @@ import ForgotPassword from "./pages/auth/ForgetPassword";
 // import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Admins from "./pages/Admins";
-import BecomePartner from "./pages/BecomePartner";
+// import BecomePartner from "./pages/BecomePartner";
 
 import Partners from "./pages/Partners";
 import Companies from "./pages/Companies";
@@ -77,7 +77,7 @@ export default function App() {
         {/* Protected Routes */}
         <Route path="/dashboard"                                   element={<WithLayout><Dashboard /></WithLayout>} />
         <Route path="/profile"                                     element={<WithLayout><Profile /></WithLayout>} />
-        <Route path="/becomePartner"                               element={<WithLayout><BecomePartner /></WithLayout>} />
+        {/* <Route path="/becomePartner"                               element={<WithLayout><BecomePartner /></WithLayout>} /> */}
         <Route path="/partners"                                    element={<WithLayout><Partners /></WithLayout>} />
         <Route path="/companies"                                   element={<WithLayout><Companies /></WithLayout>} />
         <Route path="/companies/:id"                               element={<WithLayout><CompanyDetail /></WithLayout>} />

@@ -72,7 +72,7 @@ export default function AdminSupplierPerformance() {
     <div className="max-w-[1500px]">
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4">
+      <div className="grid grid-cols-3 md:grid-cols-4 gap-3 md:gap-4 mb-4">
         <StatCard value={filtered.length}                         label="Total Suppliers"  />
         <StatCard value={totalWins}                               label="Total Wins"       />
         <StatCard value={avgRate + "%"}                           label="Avg Win Rate"     />

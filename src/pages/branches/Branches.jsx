@@ -607,7 +607,7 @@ export default function Branches() {
     <div className="max-w-[1500px] mx-auto">
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-5">
+      <div className="grid grid-cols-4 md:grid-cols-4 gap-3 md:gap-4 mb-5">
         <StatCard icon="mappin"   value={totalCount.toLocaleString()}    label="Total Branches"  active={filter === "All"}       onClick={() => setFilter("All")}      />
         <StatCard icon="clock"    value={pendingCount.toLocaleString()}  label="Pending"         active={filter === "pending"}   onClick={() => setFilter("pending")}  />
         <StatCard icon="check"    value={approvedCount.toLocaleString()} label="Approved"        active={filter === "approved"}  onClick={() => setFilter("approved")} />

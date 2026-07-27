@@ -127,7 +127,7 @@ export default function AdminOrders() {
         <StatCard icon="check"   value={summary.delivered ?? "—"} label="Delivered"     active={status === "delivered"} onClick={() => setStatus("delivered")} />
         <StatCard icon="xcircle" value={summary.cancelled ?? "—"} label="Cancelled"     active={status === "cancelled"} onClick={() => setStatus("cancelled")} />
       </div> */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-4">
+      <div className="grid grid-cols-4 md:grid-cols-4 gap-3 md:gap-4 mb-4">
         <StatCard   value={summary.totalAll  ?? "—"} label="Total Orders"  active={status === "all"}       onClick={() => setStatus("all")}       />
         <StatCard   value={summary.pending   ?? "—"} label="Pending"       active={status === "pending"}   onClick={() => setStatus("pending")}   />
         <StatCard   value={summary.delivered ?? "—"} label="Delivered"     active={status === "delivered"} onClick={() => setStatus("delivered")} />
